@@ -1,13 +1,13 @@
-// components/TaskModal.tsx
-
+import { Feather, FontAwesome, MaterialIcons } from "@expo/vector-icons";
 import React, { useState } from "react";
 import {
-  Button,
   Modal,
+  Pressable,
   StyleSheet,
   Text,
   TextInput,
-  View,
+  TouchableWithoutFeedback,
+  View
 } from "react-native";
 import { Task } from "../services/ToDoService";
 
@@ -38,45 +38,69 @@ export function TaskModal({
 
   return (
     <Modal visible={visible} transparent animationType="slide">
-      <View style={styles.overlay}>
-        <View style={styles.modal}>
-          <Text style={styles.title}>Editar Tarefa</Text>
+      <TouchableWithoutFeedback onPress={onClose}>
+        <View style={styles.overlay}>
+          <TouchableWithoutFeedback onPress={() => {}}>
+            <View style={styles.modal}>
+              <Text style={styles.title}>Editar Tarefa</Text>
 
-          <TextInput
-            value={editTitle}
-            onChangeText={setEditTitle}
-            style={styles.input}
-            placeholder="Título da tarefa"
-          />
+              <TextInput
+                value={editTitle}
+                onChangeText={setEditTitle}
+                style={styles.input}
+                placeholder="Título da tarefa"
+              />
 
-          <View style={styles.buttonGroup}>
-            <Button
-              title="Salvar"
-              onPress={() => {
-                onUpdate(task.id, editTitle);
-                onClose();
-              }}
-            />
-            <Button
-              title={task.done ? "Desmarcar" : "Concluir"}
-              onPress={() => {
-                onToggleDone(task.id);
-                onClose();
-              }}
-            />
-            <Button
-              title="Excluir"
-              color="red"
-              onPress={() => {
-                onRemove(task.id);
-                onClose();
-              }}
-            />
-          </View>
+              <View style={styles.buttonRow}>
+                <Pressable
+                  style={styles.modalButton}
+                  onPress={() => {
+                    onUpdate(task.id, editTitle);
+                    onClose();
+                  }}
+                >
+                  <Feather name="save" size={20} color="#007bff" />
+                  <Text style={styles.modalButtonText}>Salvar</Text>
+                </Pressable>
 
-          <Button title="Fechar" onPress={onClose} />
+                <Pressable
+                  style={styles.modalButton}
+                  onPress={() => {
+                    onToggleDone(task.id);
+                    onClose();
+                  }}
+                >
+                  <FontAwesome
+                    name={task.done ? "undo" : "check"}
+                    size={20}
+                    color={task.done ? "#999" : "#28a745"}
+                  />
+                  <Text style={styles.modalButtonText}>
+                    {task.done ? "Desmarcar" : "Concluir"}
+                  </Text>
+                </Pressable>
+
+                <Pressable
+                  style={[styles.modalButton, { backgroundColor: "#fdd" }]}
+                  onPress={() => {
+                    onRemove(task.id);
+                    onClose();
+                  }}
+                >
+                  <MaterialIcons name="delete" size={20} color="red" />
+                  <Text style={[styles.modalButtonText, { color: "red" }]}>
+                    Excluir
+                  </Text>
+                </Pressable>
+              </View>
+
+              <Pressable onPress={onClose} style={styles.closeButton}>
+                <Text style={styles.closeButtonText}>Fechar</Text>
+              </Pressable>
+            </View>
+          </TouchableWithoutFeedback>
         </View>
-      </View>
+      </TouchableWithoutFeedback>
     </Modal>
   );
 }
@@ -109,5 +133,40 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     gap: 8,
     marginBottom: 10,
+  },
+
+  buttonRow: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 10,
+    justifyContent: "space-between",
+    marginBottom: 16,
+  },
+
+  modalButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    backgroundColor: "#f0f0f0",
+    padding: 10,
+    borderRadius: 8,
+    flexGrow: 1,
+    flexBasis: "30%",
+  },
+
+  modalButtonText: {
+    fontSize: 14,
+    fontWeight: "500",
+    color: "#333",
+  },
+
+  closeButton: {
+    alignSelf: "center",
+    marginTop: 4,
+  },
+
+  closeButtonText: {
+    color: "#007bff",
+    fontWeight: "bold",
   },
 });

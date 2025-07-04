@@ -51,4 +51,10 @@ export class ToDoService {
     this.tasks = this.tasks.filter((task) => task.id !== id);
     await this.save();
   }
+
+  // dentro da classe ToDoService
+  async clear() {
+    this.tasks = [];
+    await this.save();
+  }
 }
